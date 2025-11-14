@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pharmacy Delivery | MediScan</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif;
+      overflow: hidden;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 40px 35px;
+      width: 420px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+      animation: fadeInUp 0.8s ease forwards;
+      transform: translateY(20px);
+      opacity: 0;
+    }
+
+    @keyframes fadeInUp {
+      from { transform: translateY(40px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+
+    h2 {
+      text-align: center;
+      color: #01579b;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    h4 {
+      text-align: center;
+      color: #0277bd;
+      font-weight: 500;
+      margin-bottom: 25px;
+    }
+
+    label {
+      color: #01579b;
+      font-weight: 500;
+    }
+
+    input, textarea {
+      border-radius: 12px;
+      border: 1px solid rgba(144, 202, 249, 0.6);
+      background: rgba(255, 255, 255, 0.6);
+      transition: all 0.3s ease;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #0288d1;
+      box-shadow: 0 0 10px rgba(2, 136, 209, 0.3);
+      background: rgba(255, 255, 255, 0.8);
+    }
+
+    button {
+      border: none;
+      border-radius: 12px;
+      padding: 10px 20px;
+      width: 100%;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background-color: #0288d1;
+    }
+
+    .btn-primary:hover {
+      background-color: #0277bd;
+      transform: translateY(-2px);
+    }
+
+    .btn-outline-secondary {
+      border: 1px solid #90caf9;
+      color: #0288d1;
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-outline-secondary:hover {
+      background-color: #e3f2fd;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="glass-card">
+    <!-- 🩺 Main heading -->
+    <h2>Pharmacy Delivery</h2>
+
+    <!-- 💊 Dynamic pharmacy name -->
+    <h4 th:text="${pharmacyName}">Pharmacy Name</h4>
+
+    <form th:action="@{/pharmacy/delivery/confirm}" method="post">
+      <input type="hidden" name="pharmacyName" th:value="${pharmacyName}">
+
+      <div class="mb-3">
+        <label class="form-label">Customer Name</label>
+        <input type="text" name="customerName" class="form-control" placeholder="Enter your full name" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Contact Number</label>
+        <input type="tel" name="contactNumber" class="form-control" placeholder="Enter contact number" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Delivery Address</label>
+        <textarea name="deliveryAddress" class="form-control" rows="3" placeholder="Enter full address" required></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100">Confirm Delivery</button>
+      <a href="/pharmacy/shops" class="btn btn-outline-secondary w-100 mt-2">← Back</a>
+    </form>
+  </div>
+</body>
+</html>

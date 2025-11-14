@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Book Appointment | MediScan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: url('https://img.freepik.com/premium-photo/abstract-medical-wallpaper-with-blue-background_113770-558.jpg')
+        no-repeat center center/cover;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      z-index: 1;
+    }
+
+    .form-container {
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.18);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 18px;
+      box-shadow: 0 6px 25px rgba(0, 100, 200, 0.25);
+      backdrop-filter: blur(20px);
+      padding: 28px 25px;
+      width: 340px;
+      color: #003366;
+      transition: all 0.4s ease-in-out;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .form-container:hover {
+      box-shadow: 0 0 20px rgba(0, 200, 255, 0.6), 0 0 40px rgba(0, 140, 255, 0.3);
+      transform: scale(1.02);
+      border-color: rgba(0, 200, 255, 0.6);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, #007bff, #00b4d8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.8px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin: 10px 0 6px;
+      color: #003366;
+      font-size: 0.9rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      font-size: 0.95rem;
+      color: #003366;
+      outline: none;
+      transition: all 0.3s ease;
+      box-shadow: inset 0 0 4px rgba(0, 150, 255, 0.15);
+    }
+
+    input:focus, textarea:focus {
+      background: #ffffff;
+      box-shadow: 0 0 8px rgba(0, 170, 255, 0.5);
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #007bff, #00b4d8);
+      color: #fff;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 170, 255, 0.4);
+    }
+
+    button:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 8px 20px rgba(0, 200, 255, 0.6);
+    }
+
+    @media (max-width: 480px) {
+      .form-container {
+        width: 85%;
+        padding: 25px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="form-container">
+    <h2>Book Appointment</h2>
+
+    <form th:action="@{/book-appointment}" th:object="${appointment}" method="post">
+      <label>Patient Name:</label>
+      <input type="text" th:field="*{patientName}" placeholder="Enter patient name" required>
+
+      <label>Doctor Name:</label>
+      <input type="text" th:field="*{doctorName}" placeholder="Enter doctor name" required>
+
+      <label>Appointment Date & Time:</label>
+      <input type="datetime-local" th:field="*{appointmentDate}" required>
+
+      <label>Notes:</label>
+      <textarea th:field="*{notes}" rows="3" placeholder="Add any notes..."></textarea>
+
+      <button type="submit">Book Now</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>My Appointments | MediScan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: url('https://cdn.pixabay.com/photo/2020/04/06/08/34/medical-5002092_1280.png')
+        no-repeat center center/cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      z-index: 0;
+    }
+
+    h2 {
+      color: #004a99;
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 2rem;
+      font-weight: 700;
+      z-index: 1;
+      position: relative;
+      background: linear-gradient(90deg, #007bff, #00e0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    table {
+      width: 85%;
+      border-collapse: collapse;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(0, 140, 255, 0.25);
+      z-index: 1;
+      position: relative;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: center;
+      color: #003366;
+      font-size: 1rem;
+    }
+
+    th {
+      background: linear-gradient(90deg, #007bff, #00bfff);
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tr {
+      transition: all 0.3s ease;
+    }
+
+    tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    tr:hover {
+      background: rgba(0, 150, 255, 0.1);
+      transform: scale(1.01);
+    }
+
+    .alert {
+      z-index: 1;
+      position: relative;
+      background: rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(0, 123, 255, 0.4);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      color: #004a99;
+      font-weight: 500;
+      padding: 15px;
+      width: 85%;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: 0 0 15px rgba(0, 123, 255, 0.25);
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #007bff, #00bfff);
+      color: white;
+      padding: 12px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      margin-top: 25px;
+      font-weight: 600;
+      box-shadow: 0 0 20px rgba(0, 160, 255, 0.4);
+      transition: all 0.3s ease;
+      z-index: 1;
+      position: relative;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0, 200, 255, 0.6);
+    }
+
+    @media (max-width: 768px) {
+      table {
+        width: 100%;
+        font-size: 0.9rem;
+      }
+
+      th, td {
+        padding: 10px;
+      }
+
+      h2 {
+        font-size: 1.6rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>🩺 My Appointments</h2>
+
+  <div th:if="${#lists.isEmpty(appointments)}" class="alert">
+    You have no booked appointments yet.
+  </div>
+
+  <table th:if="${!#lists.isEmpty(appointments)}">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Patient</th>
+        <th>Doctor</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="a : ${appointments}">
+        <td th:text="${a.appointmentId}"></td>
+        <td th:text="${a.patientName}"></td>
+        <td th:text="${a.doctorName}"></td>
+        <td th:text="${#temporals.format(a.appointmentDate, 'dd-MM-yyyy HH:mm')}"></td>
+        <td th:text="${a.status}"></td>
+        <td th:text="${a.notes}"></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <a href="/home" class="btn">⬅ Back to Home</a>
+
+</body>
+</html>

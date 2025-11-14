@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MediScan AI Assistant</title>
+  <style>
+    /* ===== Global Styles ===== */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #cfe9ff, #e4f3ff, #ffffff);
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: #003366;
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-bottom: 15px;
+      font-weight: 600;
+      color: #004c91;
+      text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
+    }
+
+    /* ===== Chat Container ===== */
+    .chat-container {
+      width: 400px;
+      height: 550px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 20px;
+      box-shadow: 0 6px 25px rgba(0, 102, 204, 0.25);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 18px;
+      transition: all 0.4s ease;
+    }
+
+    /* ===== Chat Box ===== */
+    .chat-box {
+      width: 100%;
+      height: 400px;
+      background: rgba(255, 255, 255, 0.35);
+      border-radius: 14px;
+      padding: 10px;
+      overflow-y: auto;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.08);
+      display: flex;
+      flex-direction: column;
+      scroll-behavior: smooth;
+    }
+
+    /* ===== Messages ===== */
+    .message {
+      margin: 5px 0;
+      padding: 8px 12px;
+      border-radius: 14px;
+      max-width: 80%;
+      line-height: 1.4;
+      font-size: 14px;
+      word-wrap: break-word;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .user {
+      background: linear-gradient(135deg, #007bff, #00b4d8);
+      color: #fff;
+      align-self: flex-end;
+      border-top-right-radius: 0;
+    }
+
+    .bot {
+      background: rgba(255, 255, 255, 0.6);
+      color: #002a4d;
+      align-self: flex-start;
+      border-top-left-radius: 0;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .typing {
+      font-style: italic;
+      color: #666;
+      opacity: 0.8;
+      animation: blink 1.2s infinite;
+    }
+
+    /* ===== Input Area ===== */
+    .input-area {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255, 255, 255, 0.3);
+      border-radius: 14px;
+      margin-top: 12px;
+      padding: 4px;
+      box-shadow: 0 3px 10px rgba(0, 102, 204, 0.1);
+      width: 100%;
+    }
+
+    input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #003366;
+      font-size: 14px;
+      padding: 8px;
+    }
+
+    button {
+      border: none;
+      background: linear-gradient(135deg, #007bff, #00b4d8);
+      color: white;
+      border-radius: 12px;
+      padding: 8px 10px;
+      cursor: pointer;
+      margin-left: 4px;
+      font-size: 13px;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #0062cc, #008acb);
+    }
+
+    /* ===== Animations ===== */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
+    }
+
+    /* ===== Scrollbar ===== */
+    .chat-box::-webkit-scrollbar {
+      width: 6px;
+    }
+    .chat-box::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.15);
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>🩺 MediScan AI Assistant</h2>
+
+  <div class="chat-container">
+    <div class="chat-box" id="chatBox">
+      <div class="message bot">
+        Hello 👋! I’m MediScan AI Assistant.<br>
+        Which language would you like to talk in — English, Hindi, or Kannada?
+      </div>
+    </div>
+
+    <div class="input-area">
+      <input id="userInput" type="text" placeholder="Type or speak..." autofocus>
+      <button onclick="sendMessage()">💬</button>
+      <button onclick="startVoiceRecognition()">🎤</button>
+    </div>
+  </div>
+
+  <script>
+    const chatBox = document.getElementById("chatBox");
+    let selectedLang = "en";
+
+    function appendMessage(sender, text) {
+      const msg = document.createElement("div");
+      msg.classList.add("message", sender);
+      msg.textContent = text;
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function appendTyping() {
+      const msg = document.createElement("div");
+      msg.classList.add("message", "bot", "typing");
+      msg.textContent = "MediScan is typing...";
+      chatBox.appendChild(msg);
+      chatBox.scrollTop = chatBox.scrollHeight;
+      return msg;
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("userInput");
+      const message = input.value.trim();
+      if (message === "") return;
+
+      appendMessage("user", message);
+      input.value = "";
+
+      detectLanguage(message);
+      const typingMsg = appendTyping();
+
+      setTimeout(() => {
+        typingMsg.remove();
+        const reply = getReply(message);
+        appendMessage("bot", reply);
+        speakResponse(reply);
+      }, 800);
+    }
+
+    function detectLanguage(text) {
+      const lower = text.toLowerCase();
+      if (lower.includes("hindi") || lower.includes("हिन्दी")) selectedLang = "hi";
+      else if (lower.includes("kannada") || lower.includes("ಕನ್ನಡ")) selectedLang = "kn";
+      else selectedLang = "en";
+    }
+
+    function getReply(message) {
+      const lower = message.toLowerCase();
+      if (selectedLang === "en") {
+        if (lower.includes("fever")) return "It seems you have a fever. Stay hydrated and consult a doctor if it lasts over 2 days.";
+        if (lower.includes("cold")) return "Looks like a cold. Rest well and stay warm.";
+        return "I’m here to help! Could you please describe your symptoms?";
+      }
+      if (selectedLang === "hi") {
+        if (lower.includes("बुखार") || lower.includes("fever")) return "लगता है आपको बुखार है। आराम करें और पानी ज़्यादा पिएँ।";
+        return "मैं आपकी मदद के लिए यहाँ हूँ! कृपया अपने लक्षण बताइए।";
+      }
+      if (selectedLang === "kn") {
+        if (lower.includes("ಜ್ವರ") || lower.includes("fever")) return "ನಿಮಗೆ ಜ್ವರವಾಗಿದೆ. ವಿಶ್ರಾಂತಿ ತೆಗೆದುಕೊಳ್ಳಿ ಮತ್ತು ನೀರು ಹೆಚ್ಚು ಕುಡಿಯಿರಿ.";
+        return "ನಾನು ಸಹಾಯ ಮಾಡಲು ಇಲ್ಲಿದ್ದೇನೆ! ದಯವಿಟ್ಟು ನಿಮ್ಮ ಲಕ್ಷಣಗಳನ್ನು ವಿವರಿಸಿ.";
+      }
+    }
+
+    function startVoiceRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) return alert("Speech recognition not supported.");
+
+      const recognition = new SpeechRecognition();
+      recognition.lang = getVoiceLang(selectedLang);
+      recognition.interimResults = false;
+
+      appendMessage("bot", "🎤 Listening...");
+      recognition.onresult = (e) => {
+        const transcript = e.results[0][0].transcript;
+        document.getElementById("userInput").value = transcript;
+        appendMessage("bot", "✅ Listening complete!");
+        sendMessage();
+      };
+      recognition.start();
+    }
+
+    function speakResponse(text) {
+      if (!("speechSynthesis" in window)) return;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = getVoiceLang(selectedLang);
+      utterance.rate = 1;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function getVoiceLang(lang) {
+      if (lang === "hi") return "hi-IN";
+      if (lang === "kn") return "kn-IN";
+      return "en-IN";
+    }
+
+    document.getElementById("userInput").addEventListener("keypress", e => {
+      if (e.key === "Enter") sendMessage();
+    });
+  </script>
+
+</body>
+</html>

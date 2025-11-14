@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Cart | Mediscan Pharmacy</title>
+
+  <!-- Bootstrap + Google Fonts + Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #e3f2fd, #f9fbff);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px;
+    }
+
+    .glass-container {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(0, 85, 170, 0.15);
+      width: 100%;
+      max-width: 900px;
+      padding: 40px 45px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeIn 0.9s ease;
+    }
+
+    .glass-container::before,
+    .glass-container::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 136, 255, 0.12), transparent 70%);
+      z-index: 0;
+    }
+
+    .glass-container::before {
+      top: -70px;
+      right: -60px;
+      width: 160px;
+      height: 160px;
+    }
+
+    .glass-container::after {
+      bottom: -70px;
+      left: -60px;
+      width: 160px;
+      height: 160px;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      text-align: center;
+      font-weight: 700;
+      color: #0077cc;
+      margin-bottom: 25px;
+      position: relative;
+      z-index: 1;
+    }
+
+    table {
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      z-index: 1;
+    }
+
+    thead {
+      background: rgba(0, 123, 255, 0.15);
+    }
+
+    th {
+      color: #0066b2;
+      font-weight: 600;
+    }
+
+    td {
+      vertical-align: middle;
+    }
+
+    .alert {
+      border-radius: 12px;
+      text-align: center;
+      font-weight: 500;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Buttons */
+    .btn-success {
+      background: linear-gradient(135deg, #00c853, #00b248);
+      border: none;
+      border-radius: 12px;
+      padding: 10px 25px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-success:hover {
+      background: linear-gradient(135deg, #00e676, #00c853);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: rgba(0, 123, 255, 0.1);
+      border: 1px solid rgba(0, 123, 255, 0.3);
+      color: #0066cc;
+      border-radius: 12px;
+      padding: 10px 25px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(0, 123, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    /* Checkout Section */
+    h4 {
+      color: #0077cc;
+      margin-top: 30px;
+      font-weight: 600;
+    }
+
+    .form-control {
+      background: rgba(255, 255, 255, 0.85);
+      border: 1px solid rgba(0, 119, 204, 0.3);
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #0077cc;
+      box-shadow: 0 0 0 3px rgba(0, 119, 204, 0.15);
+    }
+
+    .btn-group-custom {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .glass-container {
+        padding: 30px 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="glass-container">
+    <h2><i class="bi bi-cart3 me-2"></i>Your Cart</h2>
+
+    <div th:if="${items.empty}">
+      <div class="alert alert-info">
+        Your cart is empty. <a href="/pharmacy/medicines" class="text-primary fw-semibold text-decoration-none">Browse medicines</a>
+      </div>
+    </div>
+
+    <div th:if="${!items.empty}">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Medicine</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="entry : ${items}">
+            <td th:text="${entry.key.name}"></td>
+            <td>₹<span th:text="${entry.key.price}"></span></td>
+            <td th:text="${entry.value}"></td>
+            <td>₹<span th:text="${#numbers.formatDecimal(entry.key.price * entry.value, 1, 'POINT', 2, 'NONE')}"></span></td>
+          </tr>
+          <tr class="fw-bold">
+            <td colspan="3" class="text-end text-primary">Total:</td>
+            <td class="text-primary">₹<span th:text="${total}"></span></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4><i class="bi bi-credit-card me-2"></i>Checkout</h4>
+      <form action="/pharmacy/order/confirm" method="post">
+        <div class="mb-3">
+          <input class="form-control" name="customerName" placeholder="Your Name" required />
+        </div>
+        <div class="mb-3">
+          <input class="form-control" name="customerPhone" placeholder="Phone Number" required />
+        </div>
+        <div class="mb-3">
+          <textarea class="form-control" name="deliveryAddress" placeholder="Delivery Address" rows="2" required></textarea>
+        </div>
+
+        <div class="btn-group-custom">
+          <button class="btn btn-success">
+            <i class="bi bi-bag-check-fill me-1"></i> Place Order
+          </button>
+          <a href="/pharmacy/medicines" class="btn btn-secondary">
+            <i class="bi bi-arrow-left me-1"></i> Continue Shopping
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

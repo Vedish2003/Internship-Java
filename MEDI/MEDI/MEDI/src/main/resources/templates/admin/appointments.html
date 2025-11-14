@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>All Appointments | MediScan Admin</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: url('https://cdn.pixabay.com/photo/2020/04/06/08/34/medical-5002092_1280.png') 
+        no-repeat center center/cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px 100px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(10px);
+      z-index: 0;
+    }
+
+    h2 {
+      color: #004a99;
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 2rem;
+      font-weight: 700;
+      z-index: 1;
+      position: relative;
+      background: linear-gradient(90deg, #007bff, #00e0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .alert {
+      width: 80%;
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+      font-weight: 500;
+      backdrop-filter: blur(6px);
+      margin-bottom: 20px;
+      z-index: 1;
+      position: relative;
+    }
+
+    .alert-success {
+      background: rgba(0, 255, 100, 0.2);
+      color: #004d00;
+      border: 1px solid rgba(0, 255, 100, 0.4);
+    }
+
+    .alert-danger {
+      background: rgba(255, 0, 0, 0.2);
+      color: #660000;
+      border: 1px solid rgba(255, 0, 0, 0.4);
+    }
+
+    table {
+      width: 90%;
+      border-collapse: collapse;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(0, 140, 255, 0.25);
+      z-index: 1;
+      position: relative;
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: center;
+      color: #003366;
+      font-size: 1rem;
+    }
+
+    th {
+      background: linear-gradient(90deg, #007bff, #00bfff);
+      color: white;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    tr {
+      transition: all 0.3s ease;
+    }
+
+    tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    tr:hover {
+      background: rgba(0, 150, 255, 0.15);
+      transform: scale(1.01);
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #007bff, #00bfff);
+      color: white;
+      padding: 10px 22px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(0, 160, 255, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px rgba(0, 200, 255, 0.6);
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ff4d4d, #ff6b6b);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #004a99, #007bff);
+      box-shadow: 0 0 25px rgba(0, 123, 255, 0.5);
+      padding: 14px 28px;
+    }
+
+    .btn-secondary:hover {
+      box-shadow: 0 0 40px rgba(0, 180, 255, 0.8);
+      transform: scale(1.07);
+    }
+
+    .text-muted {
+      color: #555;
+      font-style: italic;
+    }
+
+    /* ✅ Fixed Back Button for visibility */
+    .footer-btn {
+      position: fixed;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      table {
+        width: 100%;
+        font-size: 0.9rem;
+      }
+
+      th, td {
+        padding: 10px;
+      }
+
+      h2 {
+        font-size: 1.6rem;
+      }
+
+      .btn-secondary {
+        padding: 10px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>📅 All Appointments</h2>
+
+  <!-- ✅ Flash messages -->
+  <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+  <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Patient</th>
+        <th>Doctor</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Notes</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="a : ${appointments}">
+        <td th:text="${a.appointmentId}"></td>
+        <td th:text="${a.patientName}"></td>
+        <td th:text="${a.doctorName}"></td>
+        <td th:text="${#temporals.format(a.appointmentDate, 'dd-MM-yyyy HH:mm')}"></td>
+        <td th:text="${a.status}"></td>
+        <td th:text="${a.notes}"></td>
+
+        <td>
+          <form th:if="${!a.status.equalsIgnoreCase('cancelled')}"
+                th:action="@{'/admin/appointments/cancel/' + ${a.appointmentId}}" method="post">
+            <button type="submit" class="btn btn-danger btn-sm">Cancel</button>
+          </form>
+          <span th:if="${a.status.equalsIgnoreCase('cancelled')}" class="text-muted">Cancelled</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ✅ Floating Back Button -->
+  <div class="footer-btn">
+    <a href="/admin/dashboard" class="btn btn-secondary">⬅ Back to Dashboard</a>
+  </div>
+
+</body>
+</html>

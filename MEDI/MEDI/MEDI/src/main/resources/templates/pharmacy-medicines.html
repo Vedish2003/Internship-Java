@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medicines | Mediscan Pharmacy</title>
+
+  <!-- Bootstrap + Google Font + Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+  <style>
+    /* 🌈 Base Styles */
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(120deg, #e6f4ff, #f8fbff);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 40px 20px;
+      overflow-x: hidden;
+    }
+
+    /* 💎 Glassmorphic Card */
+    .glass-card {
+      width: 100%;
+      max-width: 1200px;
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 25px;
+      box-shadow: 0 15px 35px rgba(0, 51, 102, 0.1);
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ✨ Decorative gradient glow */
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle at top right, rgba(0, 153, 255, 0.2), transparent 60%);
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    .glass-card::after {
+      content: '';
+      position: absolute;
+      bottom: -50px;
+      left: -50px;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle at bottom left, rgba(0, 153, 255, 0.15), transparent 60%);
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    /* 🩺 Title */
+    .page-title {
+      text-align: center;
+      font-weight: 700;
+      color: #0077cc;
+      font-size: 2rem;
+      margin-bottom: 30px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* 🔍 Search & Action Bar */
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 25px;
+      z-index: 2;
+      position: relative;
+    }
+
+    .action-bar input {
+      border-radius: 12px;
+      border: none;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 2px 6px rgba(0, 119, 204, 0.1);
+    }
+
+    .action-bar button {
+      background: linear-gradient(135deg, #0077cc, #005fa3);
+      border: none;
+      color: white;
+      border-radius: 12px;
+      font-weight: 500;
+      padding: 8px 20px;
+      transition: all 0.3s ease;
+    }
+
+    .action-bar button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(135deg, #0088ff, #0066cc);
+    }
+
+    .action-bar a {
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: 500;
+      padding: 8px 18px;
+      transition: all 0.3s ease;
+    }
+
+    .action-bar a.btn-primary {
+      background: linear-gradient(135deg, #0077cc, #004d99);
+      border: none;
+    }
+
+    .action-bar a.btn-primary:hover {
+      background: linear-gradient(135deg, #0088ff, #0066cc);
+      transform: scale(1.05);
+    }
+
+    .action-bar a.btn-info {
+      background: linear-gradient(135deg, #00b3ff, #0099e6);
+      border: none;
+      color: white;
+    }
+
+    /* 🧾 Table */
+    table {
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 15px;
+      overflow: hidden;
+      border-collapse: collapse;
+      z-index: 2;
+      position: relative;
+    }
+
+    thead {
+      background: linear-gradient(135deg, #0077cc, #005fa3);
+      color: white;
+    }
+
+    th, td {
+      text-align: center;
+      vertical-align: middle;
+      padding: 12px;
+    }
+
+    tbody tr {
+      transition: 0.3s;
+    }
+
+    tbody tr:hover {
+      background: rgba(0, 119, 204, 0.08);
+    }
+
+    /* 🧠 Buttons in Table */
+    .btn-success {
+      background: linear-gradient(135deg, #28a745, #1e7e34);
+      border: none;
+    }
+
+    .btn-success:hover {
+      background: linear-gradient(135deg, #32cd50, #218838);
+    }
+
+    .btn-warning {
+      background: linear-gradient(135deg, #ffc107, #e0a800);
+      border: none;
+      color: black;
+    }
+
+    .btn-warning:hover {
+      background: linear-gradient(135deg, #ffcd39, #d39e00);
+    }
+
+    /* 💬 Alert */
+    .alert {
+      border-radius: 12px;
+      font-weight: 500;
+      text-align: center;
+      z-index: 2;
+      position: relative;
+    }
+
+    /* 📱 Responsive */
+    @media (max-width: 768px) {
+      .glass-card {
+        padding: 25px;
+      }
+
+      .page-title {
+        font-size: 1.6rem;
+      }
+
+      table {
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="glass-card">
+    <h2 class="page-title"><i class="bi bi-capsule me-2"></i>Medicine Inventory</h2>
+
+    <div th:if="${message}" class="alert alert-success shadow-sm" th:text="${message}"></div>
+
+    <!-- 🔍 Search & Actions -->
+    <div class="action-bar">
+      <form method="get" action="/pharmacy/medicines" class="d-flex flex-wrap gap-2 justify-content-center">
+        <input class="form-control" name="q" th:value="${q}" placeholder="Search by name" />
+        <input class="form-control" name="category" th:value="${category}" placeholder="Category" />
+        <button class="btn" type="submit"><i class="bi bi-search me-1"></i>Search</button>
+      </form>
+      <a class="btn btn-primary" href="/pharmacy/medicines/add"><i class="bi bi-plus-lg me-1"></i>Add Medicine</a>
+      <a class="btn btn-outline-secondary" href="/pharmacy/cart"><i class="bi bi-cart4 me-1"></i>View Cart</a>
+      <a class="btn btn-info" href="/pharmacy/shops"><i class="bi bi-geo-alt-fill me-1"></i>Nearby Pharmacies</a>
+    </div>
+
+    <!-- 🧾 Medicine Table -->
+    <div class="table-responsive mt-3">
+      <table class="table table-bordered align-middle shadow-sm">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price (₹)</th>
+            <th>Stock</th>
+            <th>Description</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="m : ${medicines}">
+            <td th:text="${m.name}"></td>
+            <td th:text="${m.category}"></td>
+            <td th:text="${m.price}"></td>
+            <td th:text="${m.stock}"></td>
+            <td th:text="${m.description}"></td>
+            <td>
+              <form th:action="@{'/pharmacy/cart/add/' + ${m.medicineId}}" method="post" class="d-inline">
+                <input type="number" name="qty" value="1" min="1" max="10"
+                       class="form-control d-inline me-1" style="width:70px;" />
+                <button class="btn btn-sm btn-success" type="submit" th:disabled="${m.stock <= 0}">
+                  <i class="bi bi-bag-plus-fill"></i>
+                </button>
+              </form>
+              <a th:href="@{'/pharmacy/medicines/edit/' + ${m.medicineId}}" class="btn btn-sm btn-warning">
+                <i class="bi bi-pencil-fill"></i>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

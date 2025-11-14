@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="'Details - ' + ${hospital.hospitalName}">Hospital Details</title>
+    <style>
+        /* 🌈 Background */
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #dceeff, #f8fbff);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* 💫 Light glow background */
+        body::before, body::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.5;
+            z-index: -1;
+        }
+        body::before {
+            width: 350px;
+            height: 350px;
+            top: -80px;
+            left: -80px;
+            background: rgba(0, 128, 255, 0.3);
+        }
+        body::after {
+            width: 300px;
+            height: 300px;
+            bottom: -80px;
+            right: -80px;
+            background: rgba(0, 170, 255, 0.25);
+        }
+
+        /* 🧊 Main container - Glass card */
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            padding: 35px 30px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            animation: fadeIn 0.8s ease;
+        }
+
+        /* 🏥 Title */
+        h2 {
+            color: #005bcb;
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            text-shadow: 0 0 8px rgba(0, 123, 255, 0.15);
+        }
+
+        /* 📦 Info boxes */
+        .info-box {
+            background: rgba(255, 255, 255, 0.35);
+            border-left: 4px solid rgba(0, 91, 203, 0.8);
+            padding: 15px 20px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 91, 203, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .info-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 91, 203, 0.15);
+        }
+
+        p {
+            font-size: 15px;
+            line-height: 1.5;
+            margin: 8px 0;
+            color: #003366;
+        }
+
+        strong {
+            color: #002b80;
+        }
+
+        /* 🔗 Back button */
+        a {
+            display: inline-block;
+            text-decoration: none;
+            background: linear-gradient(135deg, #007bff, #00a2ff);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-size: 0.95em;
+            box-shadow: 0 5px 12px rgba(0, 123, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            background: linear-gradient(135deg, #0066cc, #00b3ff);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 123, 255, 0.4);
+        }
+
+        /* ✨ Fade-in animation */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 📱 Responsive design */
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 th:text="${hospital.hospitalName}">Hospital Name</h2>
+
+    <div class="info-box">
+        <p><strong>Address:</strong> <span th:text="${hospital.address}">Address here</span></p>
+        <p><strong>Contact:</strong> <span th:text="${hospital.contactNumber}">Contact here</span></p>
+        <p><strong>Specialties:</strong> <span th:text="${hospital.specialties}">Specialties here</span></p>
+    </div>
+
+    <div class="info-box">
+        <p><strong>Available Beds:</strong> <span th:text="${hospital.availableBeds}">0</span></p>
+        <p><strong>Available ICU:</strong> <span th:text="${hospital.availableIcu}">0</span></p>
+        <p><strong>Available Ambulance:</strong> <span th:text="${hospital.availableAmbulance}">0</span></p>
+        <p><strong>Available Ventilators:</strong> <span th:text="${hospital.availableVentilators}">0</span></p>
+    </div>
+
+    <div style="text-align: center;">
+        <a th:href="@{/bridge/all}">← Back to All Hospitals</a>
+    </div>
+</div>
+
+</body>
+</html>

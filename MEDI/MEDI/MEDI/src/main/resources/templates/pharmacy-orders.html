@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Pharmacy Delivery | MediScan</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #cfe9ff, #ffffff);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 40px;
+      width: 90%;
+      max-width: 700px;
+      color: #0d47a1;
+      transition: all 0.3s ease;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 40px rgba(13, 71, 161, 0.25);
+    }
+
+    h2 {
+      font-weight: 700;
+      color: #0d47a1;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+    }
+
+    label {
+      font-weight: 500;
+      color: #0d47a1;
+    }
+
+    .form-control {
+      border-radius: 12px;
+      border: 1px solid rgba(13, 71, 161, 0.2);
+      box-shadow: inset 0 1px 3px rgba(13, 71, 161, 0.1);
+      transition: 0.3s ease;
+    }
+
+    .form-control:focus {
+      border-color: #2196f3;
+      box-shadow: 0 0 8px rgba(33, 150, 243, 0.4);
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, #0d47a1, #1976d2);
+      border: none;
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(90deg, #1976d2, #42a5f5);
+      transform: scale(1.03);
+    }
+
+    .btn-outline-secondary {
+      border-radius: 12px;
+      border: 1px solid #90a4ae;
+    }
+
+    .badge {
+      font-size: 0.9rem;
+      background-color: #43a047 !important;
+    }
+
+    .pharmacy-info {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 15px 20px;
+      margin-bottom: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="glass-card">
+    <h2 class="text-center mb-4" th:text="${pharmacy['name']}">MediScan Pharmacy</h2>
+
+    <div class="pharmacy-info shadow-sm">
+      <p><strong>📍 Address:</strong> <span th:text="${pharmacy['address']}">123 Main Street, Bengaluru</span></p>
+      <p><strong>📞 Contact:</strong> <span th:text="${pharmacy['contact']}">+91 9876543210</span></p>
+      <p><strong>🚚 Delivery:</strong> <span class="badge bg-success">Available</span></p>
+    </div>
+
+    <h4 class="text-center mb-3 text-primary fw-semibold">🛒 Place a Delivery Order</h4>
+
+    <form th:action="@{/pharmacy/delivery/submit}" method="post">
+      <input type="hidden" name="pharmacyName" th:value="${pharmacy['name']}">
+
+      <div class="mb-3">
+        <label class="form-label">Your Name</label>
+        <input type="text" class="form-control" name="customerName" placeholder="Enter your full name" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Phone Number</label>
+        <input type="text" class="form-control" name="customerPhone" placeholder="Enter your phone number" required>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Delivery Address</label>
+        <textarea class="form-control" name="deliveryAddress" rows="3" placeholder="Enter your full delivery address" required></textarea>
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center">
+        <a href="/pharmacy/shops" class="btn btn-outline-secondary">← Back to Shops</a>
+        <button type="submit" class="btn btn-primary">Confirm Delivery</button>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register | MediScan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --blue-700: #005bbb;
+      --blue-500: #007bff;
+      --blue-300: #8fd3ff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(180deg, #eaf4ff 0%, #ffffff 60%);
+      background-image: url('https://img.freepik.com/free-photo/medical-banner-with-stethoscope-blue-background_23-2149611211.jpg');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 40, 90, 0.2);
+      backdrop-filter: blur(3px);
+    }
+
+    .register-card {
+      position: relative;
+      z-index: 1;
+      width: clamp(320px, 40vw, 420px);
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 16px;
+      padding: 40px 35px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 10px 30px rgba(0, 90, 160, 0.2);
+      backdrop-filter: blur(15px);
+      text-align: center;
+      animation: fadeUp 0.7s ease-out;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 { color: var(--blue-700); font-weight: 600; margin-bottom: 25px; letter-spacing: 0.5px; font-size: 1.6rem; }
+
+    form { display: flex; flex-direction: column; gap: 15px; }
+
+    input {
+      width: 100%; padding: 12px 14px; border-radius: 10px;
+      border: 1px solid rgba(0, 90, 160, 0.2);
+      background: rgba(255, 255, 255, 0.85); color: #033449;
+      font-size: 1rem; outline: none; transition: 0.3s;
+    }
+
+    input::placeholder { color: rgba(0, 60, 120, 0.5); }
+
+    input:focus {
+      border-color: var(--blue-500);
+      box-shadow: 0 0 10px rgba(0, 120, 255, 0.2);
+      background: white;
+    }
+
+    .error-msg {
+      color: red;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    button {
+      padding: 12px;
+      background: linear-gradient(90deg, #007bff, #00aaff);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 6px 18px rgba(0, 120, 255, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 120, 255, 0.4);
+    }
+
+    .extra { margin-top: 15px; font-size: 0.9rem; color: #003366; }
+    .extra a { color: var(--blue-500); text-decoration: none; font-weight: 500; }
+    .extra a:hover { text-decoration: underline; }
+
+    @media (max-width: 480px) {
+      .register-card { width: 90%; padding: 30px 25px; }
+      h2 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="register-card">
+    <h2>Create Account</h2>
+
+    <!-- Error message if registration fails -->
+    <div th:if="${error}" class="error-msg" th:text="${error}"></div>
+
+    <form th:action="@{/register}" th:object="${user}" method="post">
+      <input type="text" th:field="*{name}" placeholder="Full Name" required>
+      <input type="email" th:field="*{email}" placeholder="Email" required>
+      <input type="password" th:field="*{passwordHash}" placeholder="Password" required>
+      <input type="text" th:field="*{phone}" placeholder="Phone Number" required>
+
+      <button type="submit">Create Account</button>
+    </form>
+
+    <div class="extra">
+      Already have an account? <a th:href="@{/login}">Login here</a>
+    </div>
+  </div>
+</body>
+</html>
